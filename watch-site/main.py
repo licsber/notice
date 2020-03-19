@@ -1,10 +1,11 @@
 import requests
-import spider
 import time
 import sys
 import re
 
 sys.path.append('..')
+print(sys.path)
+import spider
 
 now_time = time.localtime()
 now_time = time.strftime('%Y-%m-%d', now_time)
