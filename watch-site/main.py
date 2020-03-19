@@ -8,12 +8,6 @@ import spider
 now_time = time.localtime()
 now_time = time.strftime('%Y-%m-%d', now_time)
 
-proxy = 'http://183.146.213.157:80'
-proxies = {
-    'http': proxy,
-    'https': proxy
-}
-
 
 def get_url_lists():
     result = set()
@@ -32,7 +26,7 @@ def get_url_lists():
     return result
 
 
-def get_content(mail):
+def get_content(mail, proxies=None):
     send_list = []
     for url in get_url_lists():
         text = spider.get_html(url, proxy=proxies)
@@ -65,7 +59,6 @@ def get_content(mail):
         time.sleep(1)
 
     print(len(send_list), send_list)
-    return
 
     for send in send_list:
         title = send[0]
@@ -75,12 +68,19 @@ def get_content(mail):
         time.sleep(1)
 
 
-def main(mail):
-    get_content(mail)
+def main(mail, proxies=None):
+    get_content(mail, proxies)
 
 
 if __name__ == '__main__':
-    if (len(sys.argv) != 1):
+    if len(sys.argv) != 1:
+        proxies = None
+        if len(sys.argv) == 3:
+            proxy = sys.argv[2]
+            proxies = {
+                'http': proxy,
+                'https': proxy
+            }
         password = sys.argv[1]
         mail = spider.SMTP(password)
-        main(mail)
+        main(mail, proxies)
