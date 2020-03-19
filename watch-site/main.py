@@ -14,7 +14,7 @@ now_time = time.strftime('%Y-%m-%d', now_time)
 def get_url_lists():
     result = []
     url = 'http://jwc.njit.edu.cn/'
-    r = requests.get(url)
+    r = requests.get(url, timeout=5)
     if r.status_code != 200:
         print('website index booooooom!')
 
@@ -40,7 +40,7 @@ def get_url_lists():
 def get_content(mail):
     send_list = []
     for url in get_url_lists():
-        r = requests.get(url=url)
+        r = requests.get(url=url, timeout=5)
         r.encoding = 'utf-8'
         if r.status_code != 200:
             print(url + ' cannot load')
