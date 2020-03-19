@@ -12,8 +12,8 @@ def parse_cookies(cookie_str):
     return result
 
 
-def get_html(url, encoding='utf-8', timeout=None):
-    r = requests.get(url, timeout=timeout)
+def get_html(url, encoding='utf-8', timeout=None, proxy=None):
+    r = requests.get(url, timeout=timeout, proxies=proxy)
     r.encoding = encoding
     if r.status_code != 200:
         return None

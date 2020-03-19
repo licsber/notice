@@ -8,6 +8,12 @@ import spider
 now_time = time.localtime()
 now_time = time.strftime('%Y-%m-%d', now_time)
 
+proxy = 'http://183.146.213.157:80'
+proxies = {
+    'http': proxy,
+    'https': proxy
+}
+
 
 def get_url_lists():
     result = set()
@@ -29,7 +35,7 @@ def get_url_lists():
 def get_content(mail):
     send_list = []
     for url in get_url_lists():
-        text = spider.get_html(url)
+        text = spider.get_html(url, proxy=proxies)
         if text is None:
             print(url + ' cannot load')
             continue
@@ -59,6 +65,7 @@ def get_content(mail):
         time.sleep(1)
 
     print(len(send_list), send_list)
+    return
 
     for send in send_list:
         title = send[0]
