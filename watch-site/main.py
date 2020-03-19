@@ -1,10 +1,8 @@
-import requests
 import time
 import sys
-import re
 
 sys.path.append('..')
-print(sys.path)
+print(len(sys.path), sys.path)
 import spider
 
 now_time = time.localtime()
@@ -12,26 +10,17 @@ now_time = time.strftime('%Y-%m-%d', now_time)
 
 
 def get_url_lists():
-    result = []
-    url = 'http://jwc.njit.edu.cn/'
-    r = requests.get(url, timeout=5)
-    if r.status_code != 200:
-        print('website index booooooom!')
+    result = set()
 
-    p = 'href="content.jsp(.*?)"  target="_blank"'
-    jwc = re.findall(p, r.text)
-    for i in jwc:
-        result.append(url + 'content.jsp' + i)
+    njit = spider.get_html('http://www.njit.edu.cn')
+    jwc = spider.get_html('http://jwc.njit.edu.cn')
 
-    p = 'href="http://www.njit.edu.cn/info(.*?)"  target="_blank"'
-    njit = re.findall(p, r.text)
-    for i in njit:
-        result.append('http://www.njit.edu.cn/info' + i)
+    nc = spider.njit_catcher(njit)
+    result.update(nc.get_all_link())
 
-    p = 'href="http://xinghuo.njit.edu.cn/info(.*?)"  target="_blank"'
-    xh = re.findall(p, r.text)
-    for i in xh:
-        result.append('http://xinghuo.njit.edu.cn/info' + i)
+    time.sleep(1)
+    jwcc = spider.jwc_catcher(jwc)
+    result.update(jwcc.get_all_link())
 
     print(len(result), result)
     return result
@@ -40,24 +29,27 @@ def get_url_lists():
 def get_content(mail):
     send_list = []
     for url in get_url_lists():
-        r = requests.get(url=url, timeout=5)
-        r.encoding = 'utf-8'
-        if r.status_code != 200:
+        text = spider.get_html(url)
+        if text is None:
             print(url + ' cannot load')
             continue
-        if r.url == 'http://jwc.njit.edu.cn/system/resource/code/auth/auth.htm':
+        if '无权访问' in text:
             print(url + ' can only access from local')
             continue
 
         if 'jwc' in url:
-            parser = spider.jwc_parser(r.text)
+            parser = spider.jwc_parser(text)
         elif 'xinghuo' in url:
-            parser = spider.xh_parser(r.text)
+            parser = spider.xh_parser(text)
+        elif 'www.njit' in url:
+            parser = spider.njit_parser(text)
         else:
-            parser = spider.njit_parser(r.text)
+            print(url, 'cannot find parser')
+            continue
 
         page_time = parser.get_time()
         if now_time == page_time:
+            print(url, ' match time')
             # if True:
             title = parser.get_title()
             body = parser.get_body()
