@@ -24,5 +24,7 @@ jobs:
         pip install requests
     - name: Watch site
       run: |
-        python watch-site/main.py ${{ secrets.EMAIL_TOKEN }}
+        cd watch-site
+        pwd
+        python main.py ${{ secrets.EMAIL_TOKEN }}
   
