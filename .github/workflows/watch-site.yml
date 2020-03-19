@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install requests -y
+        pip install requests
     - name: Watch site
       run: |
         python watch-site/main.py ${{ secrets.EMAIL_TOKEN }}
