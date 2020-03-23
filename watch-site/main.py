@@ -5,6 +5,9 @@ sys.path.append('..')
 print(len(sys.path), sys.path)
 import spider
 
+import os
+os.environ['TZ'] = 'Asia/Shanghai'
+
 now_time = time.localtime()
 now_time = time.strftime('%Y-%m-%d', now_time)
 
