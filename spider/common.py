@@ -16,6 +16,7 @@ def get_html(url, encoding='utf-8', timeout=None, proxy=None):
     r = requests.get(url, timeout=timeout, proxies=proxy)
     r.encoding = encoding
     if r.status_code != 200:
+        print(r.status_code)
         return None
     return r.text
 
