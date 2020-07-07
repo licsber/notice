@@ -26,5 +26,5 @@ jobs:
       run: |
         cd watch-site
         pwd
-        python main.py ${{ secrets.EMAIL_TOKEN }} ${{ secrets.MY_PROXY }}
+        python main.py ${{ secrets.EMAIL_TOKEN }}
   
